@@ -4,12 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess.Extensions;
 
-public class RepositoryRegistration
+public static class RepositoryRegistration
 {
-    public void RegisterRepositories(IServiceCollection services)
+    public static void RegisterRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IFileNoteRepository, FileNoteRepository>();
     }
 }

@@ -1,7 +1,5 @@
-﻿
-
-using App.Extensions.Jwt;
-using App.IServices;
+﻿using App.IServices;
+using App.Jwt;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

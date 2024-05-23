@@ -1,6 +1,6 @@
-﻿namespace WepApi.Dtos;
+﻿namespace App.Dtos;
 
-public class CategoryUpdate
+public class CategoryUpdateDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

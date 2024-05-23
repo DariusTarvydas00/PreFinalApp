@@ -1,5 +1,6 @@
 ﻿using DataAccess.IRepositories;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories;
 
@@ -7,12 +8,12 @@ public class NoteRepository(MainDbContext mainDbContext) : INoteRepository
 {
     public List<Note?> FindAll(int userId)
     {
-        return mainDbContext.Notes.Where(c => c != null && c.UserId == userId).ToList();
+        return mainDbContext.Notes.Include(note => note.FileNotes).Where(c => c != null && c.UserId == userId).ToList();
     }
 
     public List<Note?> FindAllByContent(string text,int userId)
     {
-        return mainDbContext.Notes.Where(note => note != null && note.Text.Contains(text) | note.Title.Contains(text) && note.UserId == userId).ToList();
+        return mainDbContext.Notes.Include(note => note.FileNotes).Where(note => note != null && note.Text.Contains(text) | note.Title.Contains(text) && note.UserId == userId).ToList();
     }
 
     public Note? GetById(int id,int userId)
@@ -32,7 +33,6 @@ public class NoteRepository(MainDbContext mainDbContext) : INoteRepository
         var cat = mainDbContext.Notes.FirstOrDefault(note => note != null && note.Id == entity.Id && note.UserId == entity.UserId);
         if (cat != null)
         {
-            cat.PhotoPath = entity.PhotoPath;
             cat.Text = entity.Text;
             cat.Title = entity.Title;
             cat.CategoryId = entity.CategoryId;

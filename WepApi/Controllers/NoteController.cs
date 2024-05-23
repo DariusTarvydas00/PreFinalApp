@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
+using App.Dtos;
 using App.IServices;
-using DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WepApi.Dtos;
 
 namespace WepApi.Controllers;
 
@@ -13,12 +12,11 @@ namespace WepApi.Controllers;
 public class NoteController(INoteService noteService) : Controller
 {
     [HttpGet]
-    public ActionResult<IEnumerable<Note>> GetAll()
+    public ActionResult<IEnumerable<NoteDto>> GetAll()
     {
         try
         {
-            var userId = GetUserIdFromClaims();
-            return Ok(noteService.FindAll(userId));
+            return Ok(noteService.FindAll(GetUserIdFromClaims()));
         }
         catch (Exception e)
         {
@@ -27,12 +25,11 @@ public class NoteController(INoteService noteService) : Controller
     }
     
     [HttpGet("content/{text}")]
-    public ActionResult<IEnumerable<Note>> GetAllByContent(string text)
+    public ActionResult<IEnumerable<NoteDto>> GetAllByContent(string text)
     {
         try
         {
-            var userId = GetUserIdFromClaims();
-            return Ok(noteService.FindAllByContent(text,userId));
+            return Ok(noteService.FindAllByContent(text,GetUserIdFromClaims()));
         }
         catch (Exception e)
         {
@@ -41,12 +38,11 @@ public class NoteController(INoteService noteService) : Controller
     }
     
     [HttpGet("{id:int}")]
-    public ActionResult<Note> GetById(int id)
+    public ActionResult<NoteDto> GetById(int id)
     {
         try
         {
-            var userId = GetUserIdFromClaims();
-            var cat = noteService.GetById(id, userId);
+            var cat = noteService.GetById(id, GetUserIdFromClaims());
             if (cat != null)
             {
                 return Ok(cat);
@@ -61,7 +57,7 @@ public class NoteController(INoteService noteService) : Controller
     }
 
     [HttpPost]
-    public ActionResult<Note> Create([FromBody]NoteCreate? model)
+    public ActionResult<NoteDto> Create([FromBody]NoteCreateDto? model)
     {
         try
         {
@@ -69,18 +65,9 @@ public class NoteController(INoteService noteService) : Controller
             {
                 return BadRequest(ModelState);
             }
-            var userId = GetUserIdFromClaims();
             if (model != null)
             {
-                var newNote = new Note()
-                {
-                    Title = model.Title,
-                    Text = model.Text,
-                    PhotoPath = model.PhotoPath,
-                    CategoryId = model.CategoryId,
-                    UserId = userId
-                };
-                var createdNote = noteService.Create(newNote);
+                var createdNote = noteService.Create(model,GetUserIdFromClaims());
                 return Ok(createdNote);
             }
             return BadRequest();
@@ -92,7 +79,7 @@ public class NoteController(INoteService noteService) : Controller
     }
 
     [HttpPut]
-    public ActionResult<Note> Update([FromBody]NoteUpdate? model)
+    public ActionResult<NoteDto> Update([FromBody]NoteUpdateDto? model)
     {
         try
         {
@@ -100,19 +87,9 @@ public class NoteController(INoteService noteService) : Controller
             {
                 return BadRequest(ModelState);
             }
-            var userId = GetUserIdFromClaims();
             if (model != null)
             {
-                var updateModel = new Note()
-                {
-                    Id = model.Id,
-                    Text = model.Text,
-                    Title = model.Title,
-                    PhotoPath = model.PhotoPath,
-                    UserId = userId,
-                    CategoryId = model.CategoryId
-                };
-                var updatedNote = noteService.Update(updateModel);
+                var updatedNote = noteService.Update(model,GetUserIdFromClaims());
                 return Ok(updatedNote);
             }
             return BadRequest();
@@ -124,12 +101,11 @@ public class NoteController(INoteService noteService) : Controller
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult<Note> Delete(int id)
+    public ActionResult<NoteDto> Delete(int id)
     {
         try
         {
-            var userId = GetUserIdFromClaims();
-            var deletedNote = noteService.Delete(id,userId);
+            var deletedNote = noteService.Delete(id,GetUserIdFromClaims());
             if (deletedNote != null)
             {
                 return Ok(deletedNote);
@@ -143,7 +119,6 @@ public class NoteController(INoteService noteService) : Controller
       
     }
     
-    [Authorize]
     private int GetUserIdFromClaims()
     {
         try

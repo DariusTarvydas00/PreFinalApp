@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
+using App.Dtos;
 using App.IServices;
-using DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WepApi.Dtos;
 
 namespace WepApi.Controllers;
 
@@ -13,7 +12,7 @@ namespace WepApi.Controllers;
 public class CategoryController(ICategoryService categoryService) : Controller
 {
     [HttpGet]
-    public ActionResult<IEnumerable<Category>> GetAll()
+    public ActionResult<IEnumerable<CategoryDto>> GetAll()
     {
         try
         {
@@ -28,7 +27,7 @@ public class CategoryController(ICategoryService categoryService) : Controller
     }
     
     [HttpGet("content/{text}")]
-    public ActionResult<IEnumerable<Category>> GetAllByContent(string text)
+    public ActionResult<IEnumerable<CategoryDto>> GetAllByContent(string text)
     {
         try
         {
@@ -43,7 +42,7 @@ public class CategoryController(ICategoryService categoryService) : Controller
     }
     
     [HttpGet("{id:int}")]
-    public ActionResult<Category> GetById(int id)
+    public ActionResult<CategoryDto> GetById(int id)
     {
         try
         {
@@ -63,7 +62,7 @@ public class CategoryController(ICategoryService categoryService) : Controller
     }
 
     [HttpPost]
-    public ActionResult<Category> Create([FromBody]CategoryCreate? model)
+    public ActionResult<CategoryDto> Create([FromBody]CategoryCreateDto? model)
     {
         try
         {
@@ -71,16 +70,9 @@ public class CategoryController(ICategoryService categoryService) : Controller
             {
                 return BadRequest(ModelState);
             }
-
-            var userId = GetUserIdFromClaims();
             if (model != null)
             {
-                var newCategory = new Category()
-                {
-                    UserId = userId,
-                    Name = model.Name
-                };
-                var createdCategory = categoryService.Create(newCategory);
+                var createdCategory = categoryService.Create(model,GetUserIdFromClaims());
                 return Ok(createdCategory);
             }
             return BadRequest();
@@ -92,7 +84,7 @@ public class CategoryController(ICategoryService categoryService) : Controller
     }
 
     [HttpPut]
-    public ActionResult<Category> Update([FromBody]CategoryUpdate? model)
+    public ActionResult<CategoryDto> Update([FromBody]CategoryUpdateDto? model)
     {
         try
         {
@@ -100,17 +92,9 @@ public class CategoryController(ICategoryService categoryService) : Controller
             {
                 return BadRequest(ModelState);
             }
-
-            var userId = GetUserIdFromClaims();
             if (model != null)
             {
-                var updateModel = new Category()
-                {
-                    UserId = userId,
-                    Id = model.Id,
-                    Name = model.Name
-                };
-                var updatedCategory = categoryService.Update(updateModel);
+                var updatedCategory = categoryService.Update(model, GetUserIdFromClaims());
                 return Ok(updatedCategory);
             }
             return BadRequest();
@@ -122,12 +106,11 @@ public class CategoryController(ICategoryService categoryService) : Controller
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult<Category> Delete(int id)
+    public ActionResult<CategoryDto> Delete(int id)
     {
         try
         {
-            var userId = GetUserIdFromClaims();
-            var deletedCategory = categoryService.Delete(id,userId);
+            var deletedCategory = categoryService.Delete(id,GetUserIdFromClaims());
             if (deletedCategory != null)
             {
                 return Ok(deletedCategory);

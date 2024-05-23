@@ -1,41 +1,53 @@
-﻿using App.IServices;
+﻿using App.Dtos;
+using App.IServices;
+using AutoMapper;
 using DataAccess.IRepositories;
 using DataAccess.Models;
 
 namespace App.Services
 {
-    public class CategoryService(ICategoryRepository categoryRepository)
+    public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
         : ICategoryService
     {
 
-        public List<Category?> FindAll(int userIdClaim)
+        public List<CategoryDto> FindAll(int userIdClaim)
         {
-            return categoryRepository.FindAll(userIdClaim);
+            var categories = categoryRepository.FindAll(userIdClaim);
+            return mapper.Map<List<CategoryDto>>(categories);
         }
 
-        public List<Category?> FindAllByContent(string text,int userIdClaim)
+        public List<CategoryDto> FindAllByContent(string text, int userIdClaim)
         {
-                return categoryRepository.FindAllByContent(text,userIdClaim);
+            var categories = categoryRepository.FindAllByContent(text,userIdClaim);
+            return mapper.Map<List<CategoryDto>>(categories);
         }
 
-        public Category? GetById(int id,int userIdClaim)
+        public CategoryDto? GetById(int id,int userIdClaim)
         {
-            return categoryRepository.GetById(id,userIdClaim);
+            var category = categoryRepository.GetById(id,userIdClaim);
+            return mapper.Map<CategoryDto>(category);
         }
 
-        public Category? Create(Category? model)
+        public CategoryDto? Create(CategoryCreateDto? model, int userId)
         {
-            return categoryRepository.Create(model ?? throw new ArgumentNullException(nameof(model)));
+            var newCategory = mapper.Map<Category>(model);
+            newCategory.UserId = userId;
+            var createdCategory = categoryRepository.Create(mapper.Map<Category>(newCategory ?? throw new ArgumentNullException(nameof(model))));
+            return mapper.Map<CategoryDto>(createdCategory);
         }
 
-        public Category? Update(Category? model)
+        public CategoryDto? Update(CategoryUpdateDto? model, int userId)
         {
-            return categoryRepository.Update(model ?? throw new ArgumentNullException(nameof(model)));
+            var updateCategory = mapper.Map<Category>(model);
+            updateCategory.UserId = userId;
+            var update = categoryRepository.Update(mapper.Map<Category>(updateCategory ?? throw new ArgumentNullException(nameof(model))));
+            return mapper.Map<CategoryDto>(update);
         }
 
-        public Category Delete(int id,int userIdClaim)
+        public CategoryDto Delete(int id,int userIdClaim)
         {
-            return categoryRepository.Delete(id,userIdClaim);
+            var deleted = categoryRepository.Delete(id,userIdClaim);
+            return mapper.Map<CategoryDto>(deleted);
         }
     }
 }

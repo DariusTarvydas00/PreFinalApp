@@ -24,8 +24,8 @@ public class NoteRepositoryTests : IDisposable
     {
         _dbContext.Database.EnsureDeleted();
         _dbContext.Notes.AddRange(
-            new Note { Id = 1, PhotoPath="", Title = "Meeting Notes", Text = "Discuss project", UserId = 1 },
-            new Note { Id = 2, PhotoPath="", Title = "Grocery List", Text = "Eggs, Milk", UserId = 1 }
+            new Note { Id = 1,  Title = "Meeting Notes", Text = "Discuss project", UserId = 1 },
+            new Note { Id = 2,  Title = "Grocery List", Text = "Eggs, Milk", UserId = 1 }
         );
         _dbContext.SaveChanges();
     }
@@ -69,7 +69,7 @@ public class NoteRepositoryTests : IDisposable
     [Fact]
     public void Create_AddsNote_ReturnsNote()
     {
-        var newNote = new Note {PhotoPath = "", Title = "New Note", Text = "New content", UserId = 2 };
+        var newNote = new Note { Title = "New Note", Text = "New content", UserId = 2 };
         var result = _noteRepository.Create(newNote);
 
         Assert.NotNull(result);

@@ -1,13 +1,14 @@
-﻿using DataAccess.Models;
+﻿using App.Dtos;
+using DataAccess.Models;
 
 namespace App.IServices;
 
 public interface INoteService
 {
-    List<Note?> FindAll(int userId);
-    List<Note?> FindAllByContent(string text,int userId);
-    Note? GetById(int id,int userId);
-    Note? Create(Note? model);
-    Note? Update(Note? model);
-    Note? Delete(int id,int userId);
+    List<NoteDto> FindAll(int userId);
+    List<NoteDto> FindAllByContent(string text, int userId);
+    NoteDto? GetById(int id,int userId);
+    NoteDto? Create(NoteCreateDto? model, int userId);
+    NoteDto? Update(NoteUpdateDto? model, int userId);
+    NoteDto? Delete(int id,int userId);
 }

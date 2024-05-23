@@ -1,17 +1,20 @@
-﻿using App.Extensions.Jwt;
-using App.IServices;
+﻿using App.IServices;
+using App.Jwt;
 using App.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App.Extensions;
 
-public class ServiceRegistration
+public static class ServiceRegistration
 {
-    public void RegisterServices(IServiceCollection services)
+    public static void RegisterServices(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(ServiceRegistration).Assembly);
+        
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IFileNoteService, FileNoteService>();
     }
 }

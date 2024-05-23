@@ -1,9 +1,9 @@
-﻿namespace WepApi.Dtos;
+namespace App.Dtos;
 
-public class NoteCreate
+public class NoteCreateDto
 {
     public string Title { get; set; }
     public string Text { get; set; }
     public int CategoryId { get; set; }
-    public string PhotoPath { get; set; }
+    
 }

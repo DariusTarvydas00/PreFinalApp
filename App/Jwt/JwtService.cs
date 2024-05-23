@@ -7,7 +7,7 @@ using DataAccess.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace App.Extensions.Jwt
+namespace App.Jwt
 {
     public class JwtService(IConfiguration configuration) : IJwtService
     {

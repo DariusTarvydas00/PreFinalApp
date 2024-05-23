@@ -13,7 +13,7 @@ public class CategoryRepository(MainDbContext mainDbContext) : ICategoryReposito
 
     public List<Category?> FindAllByContent(string text,int userId)
     {
-        return mainDbContext.Categories.Where(category => category != null && category.User != null && category.Name.Contains(text) && category.UserId == userId).ToList();
+        return mainDbContext.Categories.Include(category => category.Notes).Where(category => category != null && category.User != null && category.Name.Contains(text) && category.UserId == userId).ToList();
     }
 
     public Category? GetById(int id,int userId)

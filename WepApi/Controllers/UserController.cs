@@ -1,5 +1,5 @@
-﻿using App.Extensions.Jwt;
-using App.IServices;
+﻿using App.IServices;
+using App.Jwt;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,6 @@ public class UserController(IUserService userService, IJwtService jwtService) : 
         }
     }
 
-    [Authorize]
     private User? GetByUserName(string username)
     {
         try
