@@ -4,15 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using App.IServices;
-using App.Services;
-using DataAccess.IRepositories;
-using DataAccess.Repositories;
-using Jwt.Services;
+using App.Extensions;
+using DataAccess.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+var serviceRegistration = new ServiceRegistration();
+var repositoryRegistration = new RepositoryRegistration();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -42,13 +41,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<INoteService, NoteService>();
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+serviceRegistration.RegisterServices(builder.Services);
+repositoryRegistration.RegisterRepositories(builder.Services);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -1,6 +1,6 @@
-﻿using App.IServices;
+﻿using App.Extensions.Jwt;
+using App.IServices;
 using DataAccess.Models;
-using Jwt.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

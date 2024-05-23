@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 
-namespace Jwt.Services;
+namespace App.Extensions.Jwt;
 
 public interface IJwtService
 {

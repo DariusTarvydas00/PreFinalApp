@@ -15,7 +15,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\App\App.csproj" />
-      <ProjectReference Include="..\Jwt\Jwt.csproj" />
     </ItemGroup>
 
 </Project>
